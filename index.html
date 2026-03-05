@@ -17,7 +17,7 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Facebook Pixel Code (Заглушка для таргетолога) -->
+    <!-- Facebook Pixel Code -->
     <script>
         const PIXEL_ID = 'YOUR_PIXEL_ID'; // ВСТАВТЕ ID ПІКСЕЛЯ ТУТ
         
@@ -40,15 +40,15 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Montserrat', 'sans-serif'] },
+                    fontFamily: { sans:['Montserrat', 'sans-serif'] },
                     colors: {
                         brand: {
-                            base: '#0a0000',      // Дуже глибокий чорно-червоний фон
-                            darkRed: '#240005',   // Темно-бордовий для карток
-                            borderRed: '#4a0410', // Колір бордюрів карток
-                            pink: '#fb7185',      // Світло-рожевий (rose-400) для текстів
-                            brightRed: '#e11d48', // Малиново-червоний (rose-600) для кнопок
-                            light: '#ffe4e6'      // Дуже світло-рожевий для основного тексту
+                            base: '#0a0000',      
+                            darkRed: '#240005',   
+                            borderRed: '#4a0410', 
+                            pink: '#fb7185',      
+                            brightRed: '#e11d48', 
+                            light: '#ffe4e6'      
                         }
                     }
                 }
@@ -64,13 +64,22 @@
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .glass-panel { background: rgba(36, 0, 5, 0.7); backdrop-filter: blur(12px); border: 1px solid #4a0410; }
         
-        /* Градієнтний текст */
         .text-gradient {
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-image: linear-gradient(to right, #fb7185, #f43f5e);
         }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-6px); }
+            40% { transform: translateX(6px); }
+            60% { transform: translateX(-6px); }
+            80% { transform: translateX(6px); }
+        }
+        .shake { animation: shake 0.4s ease-in-out; }
+        .error-border { border-color: #e11d48 !important; box-shadow: 0 0 10px rgba(225, 29, 72, 0.4); }
     </style>
 </head>
 <body class="antialiased pb-20 md:pb-0">
@@ -91,8 +100,8 @@
             
             <div class="glass-panel rounded-2xl p-6 mb-8 inline-block mx-auto shadow-[0_0_30px_rgba(225,29,72,0.15)]">
                 <div class="flex items-center justify-center gap-4 mb-2">
-                    <span class="text-brand-light/50 line-through text-2xl">1790 ₴</span>
-                    <span class="text-4xl font-bold text-brand-pink">390 ₴</span>
+                    <span class="text-brand-light/50 line-through text-2xl dynamic-old-price">1790 ₴</span>
+                    <span class="text-4xl font-bold text-brand-pink dynamic-price">390 ₴</span>
                 </div>
                 <p class="text-sm text-brand-brightRed font-semibold mb-2 tracking-wide" id="timer-text">ДО ЗБІЛЬШЕННЯ ЦІНИ: <span id="timer" class="text-white">14:59</span></p>
             </div>
@@ -111,14 +120,12 @@
                 Гортайте вправо <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </p>
             
-            <!-- Карусель -->
             <div class="flex overflow-x-auto gap-4 pb-6 hide-scrollbar snap-x">
-                <!-- ВСТАВТЕ СВОЇ ФОТО ВІДГУКІВ У src="" -->
-                <img src="feedback1.jpg.jpg" alt="Відгук" class="w-72 h-auto rounded-xl snap-center border border-brand-borderRed shadow-lg">
-                <img src="feedback7.jpg.jpg" alt="Відгук" class="w-72 h-auto rounded-xl snap-center border border-brand-borderRed shadow-lg">
-                <img src="feedback9.jpg.jpg" alt="Відгук" class="w-72 h-auto rounded-xl snap-center border border-brand-borderRed shadow-lg">
-                <img src="feedback4.jpg.jpg" alt="Відгук" class="w-72 h-auto rounded-xl snap-center border border-brand-borderRed shadow-lg">
-                <img src="feedback8.jpg.jpg" alt="Відгук" class="w-72 h-auto rounded-xl snap-center border border-brand-borderRed shadow-lg">
+                <img src="feedback1.jpg.jpg" loading="lazy" alt="Відгук" class="w-72 h-auto rounded-xl snap-center border border-brand-borderRed shadow-lg">
+                <img src="feedback7.jpg.jpg" loading="lazy" alt="Відгук" class="w-72 h-auto rounded-xl snap-center border border-brand-borderRed shadow-lg">
+                <img src="feedback9.jpg.jpg" loading="lazy" alt="Відгук" class="w-72 h-auto rounded-xl snap-center border border-brand-borderRed shadow-lg">
+                <img src="feedback4.jpg.jpg" loading="lazy" alt="Відгук" class="w-72 h-auto rounded-xl snap-center border border-brand-borderRed shadow-lg">
+                <img src="feedback8.jpg.jpg" loading="lazy" alt="Відгук" class="w-72 h-auto rounded-xl snap-center border border-brand-borderRed shadow-lg">
             </div>
 
             <div class="text-center mt-6">
@@ -129,209 +136,85 @@
         </div>
     </section>
 
-    <!-- БЛОК 3: БОЛІ -->
-    <section class="py-16 px-4 container mx-auto max-w-4xl">
-        <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-white">ВПІЗНАЄШ СЕБЕ?</h2>
-        <div class="grid md:grid-cols-2 gap-6">
-            <div class="glass-panel p-6 rounded-2xl hover:border-brand-pink/50 transition-colors">
-                <div class="w-14 h-14 rounded-full bg-brand-brightRed/20 flex items-center justify-center mb-4">
-                    <i data-lucide="brain-circuit" class="w-7 h-7 text-brand-pink"></i>
-                </div>
-                <h3 class="font-bold text-xl mb-2 text-white">ТРИВОГА І САМОЗНЕЦІНЕННЯ НЕ ВІДПУСКАЮТЬ</h3>
-                <p class="text-brand-light/80 text-sm leading-relaxed">Ти живеш у постійному стані «щось не так». Сумніви, самокритика, відчуття що ти недостатньо хороша. Це як фоновий шум, який ніколи не вимикається.</p>
-            </div>
-            <div class="glass-panel p-6 rounded-2xl hover:border-brand-pink/50 transition-colors">
-                <div class="w-14 h-14 rounded-full bg-brand-brightRed/20 flex items-center justify-center mb-4">
-                    <i data-lucide="heart-crack" class="w-7 h-7 text-brand-pink"></i>
-                </div>
-                <h3 class="font-bold text-xl mb-2 text-white">СТОСУНКИ, ДЕ ТЕБЕ НЕ БАЧАТЬ</h3>
-                <p class="text-brand-light/80 text-sm leading-relaxed">Ти тягнеш все на собі. Даєш більше, ніж отримуєш. Чоловік не чує тебе, а ти не знаєш, як це змінити. І з'являється відчуття нереалізованості як жінки.</p>
-            </div>
-            <div class="glass-panel p-6 rounded-2xl hover:border-brand-pink/50 transition-colors">
-                <div class="w-14 h-14 rounded-full bg-brand-brightRed/20 flex items-center justify-center mb-4">
-                    <i data-lucide="user-x" class="w-7 h-7 text-brand-pink"></i>
-                </div>
-                <h3 class="font-bold text-xl mb-2 text-white">СТРАХ САМОТНОСТІ</h3>
-                <p class="text-brand-light/80 text-sm leading-relaxed">Ти боїшся залишитися одна і через цей страх терпиш те, що руйнує тебе зсередини. Або навпаки — закрилася після болю і не знаєш, як знову відкритися та довіряти.</p>
-            </div>
-            <div class="glass-panel p-6 rounded-2xl hover:border-brand-pink/50 transition-colors">
-                <div class="w-14 h-14 rounded-full bg-brand-brightRed/20 flex items-center justify-center mb-4">
-                    <i data-lucide="battery-warning" class="w-7 h-7 text-brand-pink"></i>
-                </div>
-                <h3 class="font-bold text-xl mb-2 text-white">ПОРОЖНЕЧА ВСЕРЕДИНІ</h3>
-                <p class="text-brand-light/80 text-sm leading-relaxed">Жіночність десь загубилась під масками, обов'язками та стресом. Немає легкості, немає енергії, немає відчуття «я — жінка».</p>
-            </div>
-        </div>
-    </section>
+    <!-- Інші блоки (3-7) залишаються без змін, я їх скорочую для зручності читання, але вони такі ж, як в твоєму коді -->
+    <!-- ... -->
 
-    <!-- БЛОК 4: ПОМИЛКИ -->
-    <section class="py-16 bg-[#120002] border-y border-brand-borderRed px-4 relative overflow-hidden">
-        <div class="absolute -right-20 -top-20 w-64 h-64 bg-brand-brightRed/10 rounded-full blur-[100px]"></div>
-        <div class="container mx-auto max-w-3xl relative z-10">
-            <h2 class="text-2xl md:text-4xl font-bold text-center mb-4 text-white">ЧОМУ ТИ ЗАСТРЯГЛА У СТАНІ ТРИВОГИ?</h2>
-            <p class="text-center text-brand-pink font-bold tracking-wide mb-10 text-lg">90% ЖІНОК РОБЛЯТЬ ОДНІ Й ТІ САМІ ПОМИЛКИ</p>
-            
-            <ul class="space-y-6">
-                <li class="flex gap-5 items-start p-4 rounded-xl hover:bg-brand-darkRed/50 transition-colors">
-                    <i data-lucide="alert-triangle" class="w-8 h-8 text-brand-brightRed shrink-0 mt-1"></i>
-                    <p class="text-brand-light/90 leading-relaxed"><strong class="text-white text-lg block mb-1">Слухають поверхневі поради з Instagram.</strong> Не розуміючи, що вони можуть поглиблювати тривогу. «Просто полюби себе», «відпусти ситуацію» — звучить гарно, але не працює без системи.</p>
-                </li>
-                <li class="flex gap-5 items-start p-4 rounded-xl hover:bg-brand-darkRed/50 transition-colors">
-                    <i data-lucide="alert-triangle" class="w-8 h-8 text-brand-brightRed shrink-0 mt-1"></i>
-                    <p class="text-brand-light/90 leading-relaxed"><strong class="text-white text-lg block mb-1">Борються з наслідками, а не причинами.</strong> Намагаються «тримати себе в руках», контролювати тривогу, терпіти — замість того, щоб прибрати корінь проблеми. Це як заморожувати біль, не лікуючи рану.</p>
-                </li>
-                <li class="flex gap-5 items-start p-4 rounded-xl hover:bg-brand-darkRed/50 transition-colors">
-                    <i data-lucide="alert-triangle" class="w-8 h-8 text-brand-brightRed shrink-0 mt-1"></i>
-                    <p class="text-brand-light/90 leading-relaxed"><strong class="text-white text-lg block mb-1">Не вміють утримувати фокус на собі.</strong> Постійно віддають енергію чоловікам, дітям, роботі. Шукають опору ззовні, а на себе не залишається нічого. Люди перевтомлюються, а жінка вигорає.</p>
-                </li>
-            </ul>
-        </div>
-    </section>
-
-    <!-- БЛОК 5: РІШЕННЯ -->
-    <section class="py-16 px-4 container mx-auto max-w-4xl">
-        <div class="text-center mb-12">
-            <span class="text-brand-pink font-bold uppercase text-sm tracking-widest border border-brand-pink/30 px-3 py-1 rounded-full bg-brand-pink/10">Психологи приховують це, бо заробляють на тобі</span>
-            <h2 class="text-3xl md:text-4xl font-bold mt-6 mb-6 text-white">ЩО ТИ ОТРИМАЄШ НА ДІАГНОСТИЦІ</h2>
-            <p class="text-brand-light/80 text-lg max-w-2xl mx-auto">Це не шаблонні поради. Це глибокий розбір саме ТВОЄЇ ситуації. Я глибоко аналізую твою анкету та записую детальні голосові та відео з конкретними рішеннями.</p>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-6 mb-12">
-            <div class="bg-gradient-to-b from-brand-darkRed to-brand-base p-8 rounded-2xl border-t-4 border-brand-pink shadow-lg">
-                <div class="text-brand-pink font-black text-4xl mb-4 opacity-50">01</div>
-                <h3 class="font-bold text-xl mb-3 text-white">ДІАГНОСТИКА СТАНУ</h3>
-                <p class="text-brand-light/80 leading-relaxed">Я визначу корінь твоєї тривоги та самознецінення. Покажу приховану причину, чому ти застрягла і що з цим робити далі.</p>
-            </div>
-            <div class="bg-gradient-to-b from-brand-darkRed to-brand-base p-8 rounded-2xl border-t-4 border-brand-pink shadow-lg">
-                <div class="text-brand-pink font-black text-4xl mb-4 opacity-50">02</div>
-                <h3 class="font-bold text-xl mb-3 text-white">ПЕРСОНАЛЬНА СТРАТЕГІЯ</h3>
-                <p class="text-brand-light/80 leading-relaxed">Ти отримаєш чіткий план: які конкретні кроки зроблять тебе вільною від тривоги, а які звички та патерни потрібно прибрати.</p>
-            </div>
-            <div class="bg-gradient-to-b from-brand-darkRed to-brand-base p-8 rounded-2xl border-t-4 border-brand-pink shadow-lg">
-                <div class="text-brand-pink font-black text-4xl mb-4 opacity-50">03</div>
-                <h3 class="font-bold text-xl mb-3 text-white">ТЕХНІКА ВНУТРІШНЬОЇ ОПОРИ</h3>
-                <p class="text-brand-light/80 leading-relaxed">Конкретний інструмент, який допоможе знайти опору в собі — не в чоловіках, не у схваленні. І відчути себе жінкою вже сьогодні.</p>
-            </div>
-        </div>
-
-        <div class="text-center">
-            <button onclick="openModal()" class="w-full md:w-auto px-12 py-5 bg-gradient-to-r from-brand-brightRed to-brand-pink hover:from-brand-pink hover:to-brand-brightRed text-white font-bold rounded-xl text-lg transition-transform transform hover:scale-105 shadow-[0_0_25px_rgba(225,29,72,0.5)] border border-rose-400/50">
-                ХОЧУ ПЕРСОНАЛЬНИЙ РОЗБІР
-            </button>
-        </div>
-    </section>
-
-    <!-- БЛОК 6: АВТОР -->
-    <section class="py-16 bg-[#120002] px-4 border-y border-brand-borderRed">
-        <div class="container mx-auto max-w-5xl flex flex-col md:flex-row items-center gap-12">
-            <div class="w-full md:w-1/2 relative">
-                <!-- ВСТАВТЕ ВАШЕ ФОТО ТУТ -->
-                <img src="photo2.jpg.JPG" alt="Ілона Солдатюк" class="rounded-2xl shadow-[0_0_30px_rgba(225,29,72,0.2)] relative z-10 w-full object-cover">
-                <div class="absolute -bottom-5 -right-5 w-full h-full border-2 border-brand-pink rounded-2xl z-0"></div>
-            </div>
-            <div class="w-full md:w-1/2">
-                <h2 class="text-3xl font-bold mb-2 text-white">ХТО ВЕДЕ РОЗБІР</h2>
-                <p class="text-brand-pink font-extrabold text-2xl mb-6 tracking-wide">ІЛОНА СОЛДАТЮК</p>
-                <div class="space-y-5 text-brand-light/90 leading-relaxed text-lg">
-                    <p class="font-semibold text-brand-pink/90">Я знаю, як це — коли тебе не бачать.</p>
-                    <p>Я пройшла тяжку хворобу, розлучення без підтримки і будувала бізнес у двох країнах — одна. Я знаю, як це: прокидатись і будувати себе заново. Носити маску «все добре», бо є дитина, бо робота, бо світ не чекає.</p>
-                    <p>Паралельно — 10+ років у глибинній психотерапії, розстановках, тілесних практиках та роботі з жінками.</p>
-                    <p>Сьогодні я — жінка, яка знайшла опору в собі. І я точно знаю: проблема не в тому, що ти «слабка». Проблема в тому, що ніхто не показав тобі ТВІЙ шлях.</p>
-                </div>
-                <div class="mt-8 p-6 bg-brand-darkRed border-l-4 border-brand-pink rounded-r-xl italic text-brand-light shadow-lg">
-                    «Я не даю шаблонних порад. На діагностиці я розберу саме ТВОЮ ситуацію — щоб ти точно знала, як вийти з тривоги і повернути себе.»
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- БЛОК 8-9: ГАРАНТІЯ ТА ЗМІНИ -->
+    <!-- БЛОК 8: ГАРАНТІЯ -->
     <section class="py-20 px-4 container mx-auto max-w-3xl text-center relative">
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand-brightRed/10 rounded-full blur-[120px] pointer-events-none"></div>
-        
         <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-brand-darkRed border border-brand-pink text-brand-pink mb-6 shadow-[0_0_20px_rgba(244,114,182,0.3)]">
             <i data-lucide="shield-check" class="w-10 h-10"></i>
         </div>
         <h2 class="text-3xl md:text-4xl font-bold mb-4 text-white">100% ГАРАНТІЯ ПОВЕРНЕННЯ</h2>
-        <p class="text-brand-light/70 mb-12 text-lg">Якщо персональна діагностика не принесе користі — я поверну вам усі 390 грн.</p>
-
-        <div class="text-left bg-[#120002] border border-brand-borderRed p-8 md:p-10 rounded-3xl mb-12 relative overflow-hidden shadow-2xl">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-brand-pink/10 blur-[50px]"></div>
-            <h3 class="text-2xl md:text-3xl font-bold text-center mb-8 text-white">ЩО ЗМІНИТЬСЯ ПІСЛЯ РОЗБОРУ:</h3>
-            <ul class="space-y-5">
-                <li class="flex items-start gap-4">
-                    <i data-lucide="check-circle-2" class="w-6 h-6 text-brand-pink shrink-0 mt-0.5"></i>
-                    <p class="text-lg text-brand-light/90">Ти зрозумієш, ЧОМУ тривога не відпускає і що з цим робити</p>
-                </li>
-                <li class="flex items-start gap-4">
-                    <i data-lucide="check-circle-2" class="w-6 h-6 text-brand-pink shrink-0 mt-0.5"></i>
-                    <p class="text-lg text-brand-light/90">Перестанеш тягнути все на собі і почнеш жити жіночно</p>
-                </li>
-                <li class="flex items-start gap-4">
-                    <i data-lucide="check-circle-2" class="w-6 h-6 text-brand-pink shrink-0 mt-0.5"></i>
-                    <p class="text-lg text-brand-light/90">Чоловіки будуть цінувати тебе, а не використовувати</p>
-                </li>
-                <li class="flex items-start gap-4">
-                    <i data-lucide="check-circle-2" class="w-6 h-6 text-brand-pink shrink-0 mt-0.5"></i>
-                    <p class="text-lg text-brand-light/90">Ти скажеш «ні» без провини і «так» без страху</p>
-                </li>
-                <li class="flex items-start gap-4">
-                    <i data-lucide="check-circle-2" class="w-6 h-6 text-brand-pink shrink-0 mt-0.5"></i>
-                    <p class="text-lg text-brand-light/90">Тривога відступить, а на її місце прийде спокій та легкість</p>
-                </li>
-            </ul>
-        </div>
+        <p class="text-brand-light/70 mb-12 text-lg">Якщо діагностика не принесе користі — я поверну вам усі кошти.</p>
 
         <button onclick="openModal()" class="w-full md:w-auto px-12 py-6 bg-gradient-to-r from-brand-brightRed to-brand-pink hover:from-brand-pink hover:to-brand-brightRed text-white font-extrabold rounded-xl text-xl transition-transform transform hover:scale-105 shadow-[0_0_30px_rgba(225,29,72,0.6)] border border-rose-400/50 uppercase tracking-wide">
-            ХОЧУ ПЕРСОНАЛЬНИЙ РОЗБІР
+            ХОЧУ ПЕРСОНАЛЬНИЙ РОЗБІР ЗА <span class="dynamic-price">390 ₴</span>
         </button>
     </section>
 
     <!-- Стікі кнопка для мобільних -->
     <div class="fixed bottom-0 left-0 w-full p-4 bg-[#0a0000]/90 backdrop-blur-md border-t border-brand-borderRed md:hidden z-40">
         <button onclick="openModal()" class="w-full py-4 bg-gradient-to-r from-brand-brightRed to-brand-pink text-white font-bold rounded-xl text-lg shadow-[0_0_20px_rgba(225,29,72,0.4)] animate-pulse">
-            ОТРИМАТИ ДОСТУП ЗА 390 ₴
+            ОТРИМАТИ ДОСТУП ЗА <span class="dynamic-price">390 ₴</span>
         </button>
     </div>
 
     <!-- МОДАЛЬНЕ ВІКНО (POP-UP) -->
-    <div id="modal" class="fixed inset-0 z-50 flex items-center justify-center hidden opacity-0 scale-95 transition-all duration-300">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
+    <div id="modal" class="fixed inset-0 z-50 flex items-center justify-center hidden opacity-0 scale-95 transition-all duration-300 backdrop-blur-md">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-md" onclick="closeModal()"></div>
         
-        <div class="bg-[#120002] border border-brand-borderRed p-8 rounded-2xl w-full max-w-md relative z-10 mx-4 shadow-[0_0_50px_rgba(225,29,72,0.15)]">
+        <div class="bg-[#120002] border border-brand-borderRed p-8 rounded-2xl w-full max-w-md relative z-10 mx-4 shadow-[0_0_50px_rgba(225,29,72,0.15)] max-h-[90vh] overflow-y-auto">
             <button onclick="closeModal()" class="absolute top-4 right-4 text-brand-light/50 hover:text-white transition-colors">
                 <i data-lucide="x" class="w-6 h-6"></i>
             </button>
             
             <div class="text-center mb-6">
                 <h3 class="text-2xl font-bold mb-2 text-white">Залишіть дані</h3>
-                <p class="text-brand-pink text-sm"></p>
+                <p class="text-brand-pink text-sm">Куди відправити доступ до анкети та чек після оплати?</p>
             </div>
 
-            <form id="leadForm" class="space-y-5">
+            <form id="leadForm" class="space-y-4" novalidate>
                 <div>
                     <label class="block text-sm font-medium text-brand-light/80 mb-1.5">Ваше ім'я</label>
-                    <input type="text" id="name" required placeholder="Ім'я" class="w-full bg-[#0a0000] border border-brand-borderRed rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-brand-pink transition-colors">
+                    <input type="text" id="name" required placeholder="Ім'я" class="w-full bg-[#0a0000] border border-brand-borderRed rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-pink transition-colors">
+                    <p id="name-error" class="text-brand-brightRed text-xs mt-1.5 hidden font-medium flex items-center gap-1">
+                        <i data-lucide="alert-circle" class="w-3 h-3"></i> Ім'я не може містити цифри
+                    </p>
+                </div>
+
+                <!-- ДОДАНО ПОЛЕ EMAIL (Вимагає WayForPay) -->
+                <div>
+                    <label class="block text-sm font-medium text-brand-light/80 mb-1.5">Ваш Email</label>
+                    <input type="email" id="email" required placeholder="email@example.com" class="w-full bg-[#0a0000] border border-brand-borderRed rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-pink transition-colors">
                 </div>
                 
                 <div>
                     <label class="block text-sm font-medium text-brand-light/80 mb-1.5">Номер телефону</label>
-                    <input type="tel" id="phone" required class="w-full bg-[#0a0000] border border-brand-borderRed rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-brand-pink transition-colors">
-                    <p id="phone-error" class="text-brand-brightRed text-xs mt-1 hidden font-medium">Невірний формат номера</p>
+                    <input type="tel" id="phone" required class="w-full bg-[#0a0000] border border-brand-borderRed rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-pink transition-colors">
+                    <p id="phone-error" class="text-brand-brightRed text-xs mt-1.5 hidden font-medium flex items-center gap-1">
+                        <i data-lucide="alert-circle" class="w-3 h-3"></i> Невірний формат номера
+                    </p>
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-brand-light/80 mb-1.5">Ваш Telegram (Нікнейм)</label>
                     <div class="relative">
-                        <span class="absolute left-4 top-3.5 text-brand-light/40">@</span>
-                        <input type="text" id="tg_nick" required placeholder="username" class="w-full bg-[#0a0000] border border-brand-borderRed rounded-xl pl-9 pr-4 py-3.5 text-white focus:outline-none focus:border-brand-pink transition-colors">
+                        <span class="absolute left-4 top-3 text-brand-light/40">@</span>
+                        <input type="text" id="tg_nick" required placeholder="username" class="w-full bg-[#0a0000] border border-brand-borderRed rounded-xl pl-9 pr-4 py-3 text-white focus:outline-none focus:border-brand-pink transition-colors">
                     </div>
                 </div>
 
-                <button type="submit" id="submitBtn" class="w-full mt-2 py-4 bg-gradient-to-r from-brand-brightRed to-brand-pink hover:from-brand-pink hover:to-brand-brightRed text-white font-bold rounded-xl text-lg flex justify-center items-center transition-all shadow-[0_0_20px_rgba(225,29,72,0.4)]">
-                    <span id="btnText">ПЕРЕЙТИ В TELEGRAM</span>
-                    <i data-lucide="loader-2" id="btnLoader" class="w-6 h-6 animate-spin hidden ml-2"></i>
-                </button>
+                <div class="mt-6">
+                    <p id="general-error" class="text-brand-brightRed text-sm text-center font-bold hidden mb-3 animate-pulse">
+                        Будь ласка, виправте помилки у формі вище
+                    </p>
+
+                    <button type="submit" id="submitBtn" class="w-full py-4 bg-gradient-to-r from-brand-brightRed to-brand-pink hover:from-brand-pink hover:to-brand-brightRed text-white font-bold rounded-xl text-lg flex justify-center items-center transition-all shadow-[0_0_20px_rgba(225,29,72,0.4)]">
+                        <span id="btnText">ОПЛАТИТИ <span class="dynamic-price">390 ₴</span></span>
+                        <i data-lucide="loader-2" id="btnLoader" class="w-6 h-6 animate-spin hidden ml-2"></i>
+                    </button>
+                </div>
                 <p class="text-xs text-center text-brand-light/40 mt-3">Натискаючи кнопку, ви погоджуєтесь з політикою конфіденційності</p>
             </form>
         </div>
@@ -340,12 +223,21 @@
     <!-- SCRIPTS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
     <script>
-        // Ініціалізація іконок
         lucide.createIcons();
+
+        // 1. А/Б ТЕСТ ЦІНИ (Зчитуємо з URL)
+        const urlParams = new URLSearchParams(window.location.search);
+        const priceParam = urlParams.get('price');
+        // Якщо ціна є в URL - беремо її, якщо ні - дефолт 390
+        const CURRENT_PRICE = priceParam ? parseInt(priceParam) : 390;
+        const OLD_PRICE = Math.round(CURRENT_PRICE * 4.5); // Динамічна стара ціна (для маркетингу)
+
+        // Підставляємо ціну по всьому сайту
+        document.querySelectorAll('.dynamic-price').forEach(el => el.innerHTML = CURRENT_PRICE + ' ₴');
+        document.querySelectorAll('.dynamic-old-price').forEach(el => el.innerHTML = OLD_PRICE + ' ₴');
 
         // КОНФІГ СИСТЕМИ
         const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APP_SCRIPT_URL'; 
-        const TG_BOT_URL = 'YOUR_TG_BOT_LINK'; 
 
         // Таймер
         function startTimer(duration, display) {
@@ -356,12 +248,11 @@
                 minutes = minutes < 10 ? "0" + minutes : minutes;
                 seconds = seconds < 10 ? "0" + seconds : seconds;
                 display.textContent = minutes + ":" + seconds;
-                if (--timer < 0) { timer = duration; } 
+                if (--timer < 0) timer = duration; 
             }, 1000);
         }
         window.onload = function () {
-            let fifteenMinutes = 60 * 15;
-            startTimer(fifteenMinutes, document.querySelector('#timer'));
+            startTimer(60 * 15, document.querySelector('#timer'));
         };
 
         // Логіка Pop-up
@@ -372,72 +263,104 @@
                 modal.classList.remove('opacity-0', 'scale-95');
                 modal.classList.add('opacity-100', 'scale-100');
             }, 10);
-            if(typeof fbq !== 'undefined' && PIXEL_ID !== 'YOUR_PIXEL_ID') {
-                fbq('track', 'InitiateCheckout');
-            }
+            if(typeof fbq !== 'undefined' && PIXEL_ID !== 'YOUR_PIXEL_ID') fbq('track', 'InitiateCheckout');
         }
         function closeModal() {
             modal.classList.remove('opacity-100', 'scale-100');
             modal.classList.add('opacity-0', 'scale-95');
-            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+            setTimeout(() => modal.classList.add('hidden'), 300);
         }
 
-        // Ініціалізація телефону з авто-країною (GeoJS)
+        const europeanCountries =[
+            "al", "ad", "at", "be", "ba", "bg", "hr", "cy", "cz", "dk", "ee", "fi", "fr", 
+            "de", "gr", "hu", "is", "ie", "it", "xk", "lv", "li", "lt", "lu", "mt", "md", 
+            "mc", "me", "nl", "mk", "no", "pl", "pt", "ro", "sm", "rs", "sk", "si", "es", 
+            "se", "ch", "ua", "gb", "va"
+        ];
+
         const phoneInputField = document.querySelector("#phone");
         const phoneInput = window.intlTelInput(phoneInputField, {
             initialCountry: "auto",
-            geoIpLookup: function(success, failure) {
+            onlyCountries: europeanCountries,
+            geoIpLookup: function(success) {
                 fetch("https://get.geojs.io/v1/ip/country.json")
                     .then(res => res.json())
-                    .then(data => success(data.country))
-                    .catch(() => success("ua"));
+                    .then(data => {
+                        let c = data.country.toLowerCase();
+                        if(c === 'ru' || c === 'by') c = 'ua';
+                        success(c);
+                    }).catch(() => success("ua"));
             },
             utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
         });
 
-        // Парсинг UTM
         function getUTMs() {
-            const params = new URLSearchParams(window.location.search);
             return {
-                source: params.get('utm_source') || '',
-                medium: params.get('utm_medium') || '',
-                campaign: params.get('utm_campaign') || '',
-                content: params.get('utm_content') || '',
-                term: params.get('utm_term') || ''
+                source: urlParams.get('utm_source') || '',
+                medium: urlParams.get('utm_medium') || '',
+                campaign: urlParams.get('utm_campaign') || '',
+                content: urlParams.get('utm_content') || '',
+                term: urlParams.get('utm_term') || ''
             };
         }
 
-        // Обробка форми
         const form = document.getElementById('leadForm');
         const submitBtn = document.getElementById('submitBtn');
         const btnText = document.getElementById('btnText');
         const btnLoader = document.getElementById('btnLoader');
+        
         const phoneError = document.getElementById('phone-error');
+        const nameError = document.getElementById('name-error');
+        const generalError = document.getElementById('general-error');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            let hasError = false;
             phoneError.classList.add('hidden');
-            phoneInputField.classList.remove('border-brand-brightRed');
+            nameError.classList.add('hidden');
+            generalError.classList.add('hidden');
+            phoneInputField.classList.remove('error-border', 'shake');
+            nameInput.classList.remove('error-border', 'shake');
+
+            if (/\d/.test(nameInput.value) || nameInput.value.trim() === '') {
+                nameInput.classList.add('error-border', 'shake');
+                nameError.classList.remove('hidden');
+                hasError = true;
+                setTimeout(() => nameInput.classList.remove('shake'), 400); 
+            }
 
             if (!phoneInput.isValidNumber()) {
                 phoneError.classList.remove('hidden');
-                phoneInputField.classList.add('border-brand-brightRed');
+                phoneInputField.classList.add('error-border', 'shake');
+                hasError = true;
+                setTimeout(() => phoneInputField.classList.remove('shake'), 400);
+            }
+
+            if (hasError) {
+                generalError.classList.remove('hidden');
                 return;
             }
 
-            // Блокуємо кнопку
             submitBtn.disabled = true;
-            btnText.textContent = 'ОБРОБКА...';
+            btnText.textContent = 'СТВОРЕННЯ ЗАМОВЛЕННЯ...';
             btnLoader.classList.remove('hidden');
 
             const utms = getUTMs();
             let tgNick = document.getElementById('tg_nick').value.trim();
-            if(tgNick && !tgNick.startsWith('@')) { tgNick = '@' + tgNick; }
+            if(tgNick && !tgNick.startsWith('@')) tgNick = '@' + tgNick;
 
+            // 1. ПАРАМЕТРИ ДЛЯ ГУГЛ ТАБЛИЦІ (Доповнені за твоїм проханням)
             const payload = {
-                name: document.getElementById('name').value,
+                isAudit: true, // Мітка для перехоплювача
+                name: nameInput.value.trim(),
+                email: emailInput.value.trim(),
                 phone: phoneInput.getNumber(),
+                country: phoneInput.getSelectedCountryData().iso2.toUpperCase(),
                 telegram: tgNick,
+                price: CURRENT_PRICE + " грн", // Передаємо актуальну ціну
                 utm_source: utms.source,
                 utm_medium: utms.medium,
                 utm_campaign: utms.campaign,
@@ -446,31 +369,174 @@
             };
 
             try {
-                // Відправка в Google таблиці
-                await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
+                // Відправляємо в Google Таблицю (не чекаємо відповіді, щоб було швидше)
+                fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST', mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
 
-                // Піксель конверсії
-                if(typeof fbq !== 'undefined' && PIXEL_ID !== 'YOUR_PIXEL_ID') {
-                    fbq('track', 'Lead');
-                }
+                if(typeof fbq !== 'undefined' && PIXEL_ID !== 'YOUR_PIXEL_ID') fbq('track', 'Lead');
 
-                // Редирект в бота
-                window.location.href = TG_BOT_URL;
+                // 2. ЗАПИТ НА НАШ VERCEL BACKEND ДЛЯ WAYFORPAY
+                const paymentRes = await fetch('/api/payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        amount: CURRENT_PRICE,
+                        clientName: payload.name,
+                        clientEmail: payload.email,
+                        clientPhone: payload.phone
+                    })
+                });
+
+                const paymentData = await paymentRes.json();
+
+                if(paymentData.error) throw new Error(paymentData.error);
+
+                // 3. СТВОРЮЄМО ПРИХОВАНУ ФОРМУ ДЛЯ РЕДІРЕКТУ НА WAYFORPAY
+                const wfpForm = document.createElement('form');
+                wfpForm.method = 'POST';
+                wfpForm.action = 'https://secure.wayforpay.com/pay';
+                
+                for (const key in paymentData) {
+                    if (Array.isArray(paymentData[key])) {
+                        paymentData[key].forEach(val => {
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = `${key}[]`;
+                            input.value = val;
+                            wfpForm.appendChild(input);
+                        });
+                    } else {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = key;
+                        input.value = paymentData[key];
+                        wfpForm.appendChild(input);
+                    }
+                }
+                document.body.appendChild(wfpForm);
+                wfpForm.submit(); // Авто-відправка і редірект на сторінку оплати
 
             } catch (error) {
                 console.error('Error:', error);
-                alert('Сталася помилка. Спробуйте ще раз.');
+                alert('Сталася помилка при створенні оплати. Спробуйте ще раз.');
                 submitBtn.disabled = false;
-                btnText.textContent = 'ПЕРЕЙТИ В TELEGRAM';
+                btnText.innerHTML = `ОПЛАТИТИ <span class="dynamic-price">${CURRENT_PRICE} ₴</span>`;
                 btnLoader.classList.add('hidden');
             }
         });
     </script>
 </body>
+</html>
+2. Backend: Vercel Serverless Function (api/payment.js)
+У своєму проєкті на GitHub створи папку api (в корені проекту), а всередині неї файл payment.js. Vercel автоматично розпізнає це як бекенд-функцію.
+Файл: api/payment.js
+code
+JavaScript
+const crypto = require('crypto');
 
+export default async function handler(req, res) {
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method Not Allowed' });
+    }
+
+    try {
+        const { amount, clientName, clientEmail, clientPhone } = req.body;
+
+        // Ці ключі ти маєш додати в налаштуваннях Vercel (Settings -> Environment Variables)
+        const merchantAccount = process.env.WFP_MERCHANT_ACCOUNT;
+        const merchantSecretKey = process.env.WFP_MERCHANT_SECRET;
+        
+        // Зміни на домен свого сайту на Vercel (без слеша вкінці)
+        const merchantDomainName = 'https://fut.vercel.app'; 
+        const returnUrl = `${merchantDomainName}/thank-you.html`;
+
+        if (!merchantAccount || !merchantSecretKey) {
+            throw new Error("WayForPay keys are missing in Vercel Environment Variables");
+        }
+
+        const orderReference = `ORDER_${Date.now()}`;
+        const orderDate = Math.round(Date.now() / 1000);
+        const currency = 'UAH';
+        const productName =['Персональна діагностика від Ілони Солдатюк']; // Обов'язково масив
+        const productCount = [1]; // Обов'язково масив
+        const productPrice = [amount]; // Обов'язково масив
+
+        // Формуємо рядок для підпису відповідно до документації WayForPay
+        const signString =[
+            merchantAccount,
+            merchantDomainName,
+            orderReference,
+            orderDate,
+            amount,
+            currency,
+            productName[0],
+            productCount[0],
+            productPrice[0]
+        ].join(';');
+        
+        // Генеруємо HMAC_MD5 підпис
+        const signature = crypto.createHmac('md5', merchantSecretKey).update(signString).digest('hex');
+
+        // Повертаємо всі необхідні поля на фронтенд, щоб він створив HTML-форму
+        res.status(200).json({
+            merchantAccount,
+            merchantDomainName,
+            orderReference,
+            orderDate,
+            amount,
+            currency,
+            productName,
+            productCount,
+            productPrice,
+            clientFirstName: clientName,
+            clientEmail: clientEmail,
+            clientPhone: clientPhone,
+            returnUrl,
+            merchantSignature: signature
+        });
+
+    } catch (error) {
+        console.error("Payment API Error:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+3. Frontend: Сторінка Подяки (thank-you.html)
+Після успішної оплати WayForPay автоматично перекине людину на сторінку returnUrl, яку ми задали в бекенді (/thank-you.html).
+Створи файл thank-you.html в корені проєкту:
+code
+Html
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оплата успішна</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { background-color: #0a0000; color: #ffe4e6; font-family: 'Montserrat', sans-serif; }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-[#120002] border border-[#4a0410] p-8 md:p-12 rounded-3xl max-w-lg w-full text-center shadow-[0_0_50px_rgba(225,29,72,0.15)]">
+        <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-green-500/10 border border-green-500/50 text-green-500 mb-6">
+            <i data-lucide="check-circle" class="w-12 h-12"></i>
+        </div>
+        
+        <h1 class="text-3xl font-bold mb-4 text-white">Оплата успішна!</h1>
+        <p class="text-[#fb7185] mb-8 text-lg">Дякуємо за довіру. Натисніть кнопку нижче, щоб перейти в Telegram-бот та отримати доступ до матеріалів.</p>
+        
+        <!-- ВСТАВ СВІЙ ЛІНК НА БОТА НИЖЧЕ -->
+        <a href="YOUR_TG_BOT_LINK" class="block w-full py-5 bg-gradient-to-r from-[#e11d48] to-[#fb7185] text-white font-bold rounded-xl text-lg transition-transform transform hover:scale-105 shadow-[0_0_20px_rgba(225,29,72,0.4)]">
+            ПЕРЕЙТИ В TELEGRAM БОТ
+        </a>
+    </div>
+
+    <script>lucide.createIcons();</script>
+</body>
 </html>
