@@ -111,14 +111,13 @@
                 Гортайте вправо <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </p>
             
-            <!-- Карусель -->
+            <!-- Карусель (Додано loading="lazy") -->
             <div class="flex overflow-x-auto gap-4 pb-6 hide-scrollbar snap-x">
-                <!-- ВСТАВТЕ СВОЇ ФОТО ВІДГУКІВ У src="" -->
-                <img src="feedback1.jpg.jpg" alt="Відгук" class="w-72 h-auto rounded-xl snap-center border border-brand-borderRed shadow-lg">
-                <img src="feedback7.jpg.jpg" alt="Відгук" class="w-72 h-auto rounded-xl snap-center border border-brand-borderRed shadow-lg">
-                <img src="feedback9.jpg.jpg" alt="Відгук" class="w-72 h-auto rounded-xl snap-center border border-brand-borderRed shadow-lg">
-                <img src="feedback4.jpg.jpg" alt="Відгук" class="w-72 h-auto rounded-xl snap-center border border-brand-borderRed shadow-lg">
-                <img src="feedback8.jpg.jpg" alt="Відгук" class="w-72 h-auto rounded-xl snap-center border border-brand-borderRed shadow-lg">
+                <img src="feedback1.jpg.jpg" loading="lazy" alt="Відгук" class="w-72 h-auto rounded-xl snap-center border border-brand-borderRed shadow-lg">
+                <img src="feedback7.jpg.jpg" loading="lazy" alt="Відгук" class="w-72 h-auto rounded-xl snap-center border border-brand-borderRed shadow-lg">
+                <img src="feedback9.jpg.jpg" loading="lazy" alt="Відгук" class="w-72 h-auto rounded-xl snap-center border border-brand-borderRed shadow-lg">
+                <img src="feedback4.jpg.jpg" loading="lazy" alt="Відгук" class="w-72 h-auto rounded-xl snap-center border border-brand-borderRed shadow-lg">
+                <img src="feedback8.jpg.jpg" loading="lazy" alt="Відгук" class="w-72 h-auto rounded-xl snap-center border border-brand-borderRed shadow-lg">
             </div>
 
             <div class="text-center mt-6">
@@ -225,8 +224,8 @@
     <section class="py-16 bg-[#120002] px-4 border-y border-brand-borderRed">
         <div class="container mx-auto max-w-5xl flex flex-col md:flex-row items-center gap-12">
             <div class="w-full md:w-1/2 relative">
-                <!-- ВСТАВТЕ ВАШЕ ФОТО ТУТ -->
-                <img src="photo2.jpg.JPG" alt="Ілона Солдатюк" class="rounded-2xl shadow-[0_0_30px_rgba(225,29,72,0.2)] relative z-10 w-full object-cover">
+                <!-- ВСТАВТЕ ВАШЕ ФОТО ТУТ (Додано loading="lazy") -->
+                <img src="photo2.jpg.JPG" loading="lazy" alt="Ілона Солдатюк" class="rounded-2xl shadow-[0_0_30px_rgba(225,29,72,0.2)] relative z-10 w-full object-cover">
                 <div class="absolute -bottom-5 -right-5 w-full h-full border-2 border-brand-pink rounded-2xl z-0"></div>
             </div>
             <div class="w-full md:w-1/2">
@@ -308,10 +307,12 @@
                 <p class="text-brand-pink text-sm"></p>
             </div>
 
-            <form id="leadForm" class="space-y-5">
+            <form id="leadForm" class="space-y-5" novalidate>
                 <div>
                     <label class="block text-sm font-medium text-brand-light/80 mb-1.5">Ваше ім'я</label>
                     <input type="text" id="name" required placeholder="Ім'я" class="w-full bg-[#0a0000] border border-brand-borderRed rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-brand-pink transition-colors">
+                    <!-- Додано поле для помилки імені -->
+                    <p id="name-error" class="text-brand-brightRed text-xs mt-1 hidden font-medium">Ім'я не може містити цифри</p>
                 </div>
                 
                 <div>
@@ -344,7 +345,7 @@
         lucide.createIcons();
 
         // КОНФІГ СИСТЕМИ
-        const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APP_SCRIPT_URL'; 
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzTOEfN0PZWz5RAVdfvUhg6lCQgI0GMe7E9TE5Ek8XzNaDsKZh4SrS9scvDjlRcgYaOSg/exec'; 
         const TG_BOT_URL = 'YOUR_TG_BOT_LINK'; 
 
         // Таймер
@@ -382,14 +383,30 @@
             setTimeout(() => { modal.classList.add('hidden'); }, 300);
         }
 
+        // Європейські країни без РФ (ru) та РБ (by)
+        const europeanCountries =[
+            "al", "ad", "at", "be", "ba", "bg", "hr", "cy", "cz", "dk", "ee", "fi", "fr", 
+            "de", "gr", "hu", "is", "ie", "it", "xk", "lv", "li", "lt", "lu", "mt", "md", 
+            "mc", "me", "nl", "mk", "no", "pl", "pt", "ro", "sm", "rs", "sk", "si", "es", 
+            "se", "ch", "ua", "gb", "va"
+        ];
+
         // Ініціалізація телефону з авто-країною (GeoJS)
         const phoneInputField = document.querySelector("#phone");
         const phoneInput = window.intlTelInput(phoneInputField, {
             initialCountry: "auto",
+            onlyCountries: europeanCountries, // Обмеження країн
             geoIpLookup: function(success, failure) {
                 fetch("https://get.geojs.io/v1/ip/country.json")
                     .then(res => res.json())
-                    .then(data => success(data.country))
+                    .then(data => {
+                        let country = data.country.toLowerCase();
+                        // Перевірка по IP: якщо зайшли з ру/бy, ставимо Україну
+                        if(country === 'ru' || country === 'by') {
+                            country = 'ua';
+                        }
+                        success(country);
+                    })
                     .catch(() => success("ua"));
             },
             utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
@@ -412,18 +429,36 @@
         const submitBtn = document.getElementById('submitBtn');
         const btnText = document.getElementById('btnText');
         const btnLoader = document.getElementById('btnLoader');
+        
         const phoneError = document.getElementById('phone-error');
+        const nameError = document.getElementById('name-error');
+        const nameInput = document.getElementById('name');
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            // Скидання помилок
+            let hasError = false;
             phoneError.classList.add('hidden');
+            nameError.classList.add('hidden');
             phoneInputField.classList.remove('border-brand-brightRed');
+            nameInput.classList.remove('border-brand-brightRed');
 
+            // Валідація імені (не повинно бути цифр)
+            if (/\d/.test(nameInput.value)) {
+                nameError.classList.remove('hidden');
+                nameInput.classList.add('border-brand-brightRed');
+                hasError = true;
+            }
+
+            // Валідація номеру телефону
             if (!phoneInput.isValidNumber()) {
                 phoneError.classList.remove('hidden');
                 phoneInputField.classList.add('border-brand-brightRed');
-                return;
+                hasError = true;
             }
+
+            if (hasError) return; // Зупиняємо відправку, якщо є помилка
 
             // Блокуємо кнопку
             submitBtn.disabled = true;
@@ -434,10 +469,14 @@
             let tgNick = document.getElementById('tg_nick').value.trim();
             if(tgNick && !tgNick.startsWith('@')) { tgNick = '@' + tgNick; }
 
+            // ОБ'ЄКТ PAYLOAD ДЛЯ ТВОЄЇ ІСНУЮЧОЇ ТАБЛИЦІ
             const payload = {
-                name: document.getElementById('name').value,
+                sheetName: "Платний аудит 2.0", // ВАЖЛИВО: Скрипт сам створить цей лист!
+                price: "390 грн",               // ВАЖЛИВО: Передаємо ціну
+                name: nameInput.value.trim(),
                 phone: phoneInput.getNumber(),
                 telegram: tgNick,
+                country: phoneInput.getSelectedCountryData().iso2.toUpperCase(), // Передаємо країну
                 utm_source: utms.source,
                 utm_medium: utms.medium,
                 utm_campaign: utms.campaign,
@@ -472,6 +511,4 @@
         });
     </script>
 </body>
-
 </html>
-
