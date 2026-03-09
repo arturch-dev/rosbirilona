@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оплата успішна | Ілона Солдатюк</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { background-color: #0a0000; color: #ffe4e6; font-family: 'Montserrat', sans-serif; }
+    </style>
+
+    <!-- Facebook Pixel Code (Конверсія Покупки) -->
+    <script>
+        const PIXEL_ID = 'YOUR_PIXEL_ID'; // Встав ID Пікселя
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        if(PIXEL_ID !== 'YOUR_PIXEL_ID') {
+            fbq('init', PIXEL_ID);
+            fbq('track', 'PageView');
+            fbq('track', 'Purchase', {currency: "UAH", value: 390.00});
+        }
+    </script>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-4 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]">
+
+    <div class="bg-[#120002] border border-[#4a0410] p-8 md:p-12 rounded-3xl max-w-lg w-full text-center shadow-[0_0_50px_rgba(225,29,72,0.15)] relative z-10">
+        
+        <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-green-500/10 border border-green-500/30 text-green-500 mb-6 shadow-[0_0_20px_rgba(34,197,94,0.3)]">
+            <i data-lucide="check-circle" class="w-12 h-12"></i>
+        </div>
+        
+        <h1 class="text-3xl font-extrabold mb-4 text-white uppercase tracking-wider">Оплата успішна!</h1>
+        <p class="text-[#fb7185] mb-8 text-lg font-medium">ДякуЮ за довіру. Я зв'яжусь із тобою найближчим часом. А поки можеш перейти в мій телеграм канал, там знайдеш багато цікавого.</p>
+        
+        <a href="https://t.me/+Yzn1hDcxK1YwYjQ6" target="_blank" class="block w-full py-5 bg-gradient-to-r from-[#e11d48] to-[#fb7185] text-white font-bold rounded-xl text-lg transition-transform transform hover:scale-105 shadow-[0_0_25px_rgba(225,29,72,0.5)] border border-rose-400/50 uppercase">
+            ПЕРЕЙТИ В TELEGRAM
+        </a>
+    </div>
+
+    <!-- Декор -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#e11d48]/10 rounded-full blur-[120px] pointer-events-none z-0"></div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
