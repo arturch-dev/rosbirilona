@@ -17,12 +17,9 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Бібліотека для шифрування підпису WayForPay -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-
-    <!-- Facebook Pixel Code (Заглушка для таргетолога) -->
+    <!-- Facebook Pixel Code -->
     <script>
-        const PIXEL_ID = '1299600201739170'; // ВСТАВТЕ ID ПІКСЕЛЯ ТУТ
+        const PIXEL_ID = '1299600201739170'; 
         
         !function(f,b,e,v,n,t,s)
         {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -113,6 +110,7 @@
                 Гортайте вправо <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </p>
             
+            <!-- Карусель -->
             <div class="flex overflow-x-auto gap-4 pb-6 hide-scrollbar snap-x">
                 <img src="feedback1.jpg.jpg" loading="lazy" alt="Відгук" class="w-72 h-auto rounded-xl snap-center border border-brand-borderRed shadow-lg">
                 <img src="feedback7.jpg.jpg" loading="lazy" alt="Відгук" class="w-72 h-auto rounded-xl snap-center border border-brand-borderRed shadow-lg">
@@ -282,7 +280,7 @@
         </div>
 
         <button onclick="openModal()" class="w-full md:w-auto px-12 py-6 bg-gradient-to-r from-brand-brightRed to-brand-pink hover:from-brand-pink hover:to-brand-brightRed text-white font-extrabold rounded-xl text-xl transition-transform transform hover:scale-105 shadow-[0_0_30px_rgba(225,29,72,0.6)] border border-rose-400/50 uppercase tracking-wide">
-            ХОЧУ ПЕРСОНАЛЬНИЙ РОЗБІР
+            ХОЧУ ПЕРСОНАЛЬНИЙ РОЗБІР ЗА <span class="dynamic-price">390 ₴</span>
         </button>
     </section>
 
@@ -342,31 +340,27 @@
     <script>
         lucide.createIcons();
 
-        // 1. ЛОГІКА А/Б ТЕСТУВАННЯ ЦІНИ ТА UID
-        const urlParams = new URLSearchParams(window.location.search);
-        
-        // Читаємо ціну з посилання (наприклад ?price=290). Якщо порожньо - беремо 390
-        const currentPrice = parseInt(urlParams.get('price')) || 390; 
-        
-        // Генеруємо UID клієнта (Унікальний ідентифікатор сесії/замовлення)
-        const generateUID = () => 'uid_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-        const userUID = generateUID();
+        // 1. КОНФІГ СИСТЕМИ (ЗАМІНИТИ НА СВОЄ НОВЕ ПОСИЛАННЯ СКРИПТА!)
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzQFF2jg87YSoQoh6YchHNuTY22BADTnhCzSSrbIPIZpHdi9DTt5QiD58wQW0F24bBHBw/exec'; 
 
-        // Оновлюємо ВСІ ціни на сайті візуально (де є клас dynamic-price)
+        // 2. ЛОГІКА А/Б ТЕСТУВАННЯ ЦІНИ
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentPrice = parseInt(urlParams.get('price')) || 390; 
+
+        // Оновлення цін на сайті
         document.querySelectorAll('.dynamic-price').forEach(el => {
             el.textContent = currentPrice + ' ₴';
         });
 
-        // КОНФІГИ ТАБЛИЦІ ТА WAYFORPAY
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzQFF2jg87YSoQoh6YchHNuTY22BADTnhCzSSrbIPIZpHdi9DTt5QiD58wQW0F24bBHBw/exec'; 
-        
-        // Дані WayForPay
-        const WFP_MERCHANT_ACCOUNT = 'freelance_user_688267859900c';
-        const WFP_MERCHANT_SECRET = 'a1d150e3620582a3f43a88d65e7633710d75caba';
-        const WFP_DOMAIN = window.location.hostname || "fut.vercel.app";
-        // Шлях до сторінки подяки, на яку поверне WayForPay після оплати
-        const WFP_RETURN_URL = window.location.origin + window.location.pathname.replace('index.html', '') + 'thank-you.html';
-
+        function getUTMs() {
+            return {
+                utm_source: urlParams.get('utm_source') || '',
+                utm_medium: urlParams.get('utm_medium') || '',
+                utm_campaign: urlParams.get('utm_campaign') || '',
+                utm_content: urlParams.get('utm_content') || '',
+                utm_term: urlParams.get('utm_term') || ''
+            };
+        }
 
         // Таймер
         function startTimer(duration, display) {
@@ -380,10 +374,9 @@
                 if (--timer < 0) { timer = duration; } 
             }, 1000);
         }
-        window.onload = function () {
-            startTimer(60 * 15, document.querySelector('#timer'));
-        };
+        window.onload = function () { startTimer(60 * 15, document.querySelector('#timer')); };
 
+        // Попап
         const modal = document.getElementById('modal');
         function openModal() {
             modal.classList.remove('hidden');
@@ -391,9 +384,7 @@
                 modal.classList.remove('opacity-0', 'scale-95');
                 modal.classList.add('opacity-100', 'scale-100');
             }, 10);
-            if(typeof fbq !== 'undefined' && PIXEL_ID !== 'YOUR_PIXEL_ID') {
-                fbq('track', 'InitiateCheckout');
-            }
+            if(typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout');
         }
         function closeModal() {
             modal.classList.remove('opacity-100', 'scale-100');
@@ -401,18 +392,13 @@
             setTimeout(() => { modal.classList.add('hidden'); }, 300);
         }
 
-        const europeanCountries =[
-            "al", "ad", "at", "be", "ba", "bg", "hr", "cy", "cz", "dk", "ee", "fi", "fr", 
-            "de", "gr", "hu", "is", "ie", "it", "xk", "lv", "li", "lt", "lu", "mt", "md", 
-            "mc", "me", "nl", "mk", "no", "pl", "pt", "ro", "sm", "rs", "sk", "si", "es", 
-            "se", "ch", "ua", "gb", "va"
-        ];
-
+        // Телефон
+        const europeanCountries =["al","ad","at","be","ba","bg","hr","cy","cz","dk","ee","fi","fr","de","gr","hu","is","ie","it","xk","lv","li","lt","lu","mt","md","mc","me","nl","mk","no","pl","pt","ro","sm","rs","sk","si","es","se","ch","ua","gb","va"];
         const phoneInputField = document.querySelector("#phone");
         const phoneInput = window.intlTelInput(phoneInputField, {
             initialCountry: "auto",
             onlyCountries: europeanCountries, 
-            geoIpLookup: function(success, failure) {
+            geoIpLookup: function(success) {
                 fetch("https://get.geojs.io/v1/ip/country.json")
                     .then(res => res.json())
                     .then(data => {
@@ -424,16 +410,7 @@
             utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
         });
 
-        function getUTMs() {
-            return {
-                source: urlParams.get('utm_source') || '',
-                medium: urlParams.get('utm_medium') || '',
-                campaign: urlParams.get('utm_campaign') || '',
-                content: urlParams.get('utm_content') || '',
-                term: urlParams.get('utm_term') || ''
-            };
-        }
-
+        // Обробка Форми
         const form = document.getElementById('leadForm');
         const submitBtn = document.getElementById('submitBtn');
         const btnText = document.getElementById('btnText');
@@ -444,8 +421,8 @@
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             let hasError = false;
+            
             phoneError.classList.add('hidden');
             nameError.classList.add('hidden');
             phoneInputField.classList.remove('border-brand-brightRed');
@@ -456,114 +433,78 @@
                 nameInput.classList.add('border-brand-brightRed');
                 hasError = true;
             }
-
             if (!phoneInput.isValidNumber()) {
                 phoneError.classList.remove('hidden');
                 phoneInputField.classList.add('border-brand-brightRed');
                 hasError = true;
             }
-
             if (hasError) return;
 
             submitBtn.disabled = true;
             btnText.textContent = 'СТВОРЕННЯ ОПЛАТИ...';
             btnLoader.classList.remove('hidden');
 
-            const utms = getUTMs();
             let tgNick = document.getElementById('tg_nick').value.trim();
-            if(tgNick && !tgNick.startsWith('@')) { tgNick = '@' + tgNick; }
+            if(tgNick && !tgNick.startsWith('@')) tgNick = '@' + tgNick;
 
-            // PAYLOAD ДЛЯ ТАБЛИЦІ (Існуючий код доповнено UID та динамічною ціною)
+            const utms = getUTMs();
+            // Шлях до thank-you сторінки
+            const returnUrl = window.location.origin + window.location.pathname.replace('index.html', '') + 'thank-you.html';
+
+            // PAYLOAD ДЛЯ УНІВЕРСАЛЬНОГО СКРИПТА
             const payload = {
                 sheetName: "Платний аудит 2.0", 
-                price: currentPrice + " грн", // Відправляємо динамічну ціну в таблицю
                 name: nameInput.value.trim(),
                 phone: phoneInput.getNumber(),
                 telegram: tgNick,
                 country: phoneInput.getSelectedCountryData().iso2.toUpperCase(), 
-                uid: userUID, // Відправляємо UID в таблицю
-                utm_source: utms.source,
-                utm_medium: utms.medium,
-                utm_campaign: utms.campaign,
-                utm_content: utms.content,
-                utm_term: utms.term
+                amount: currentPrice,       // Скрипт зрозуміє, що треба генерувати платіж
+                currency: "UAH",
+                return_url: returnUrl,
+                ...utms // Додаємо UTM у масив даних
             };
 
             try {
-                // 1. Відправка в Google таблиці (не чекаємо завершення, щоб пришвидшити оплату)
-                fetch(GOOGLE_SCRIPT_URL, {
+                // Відправляємо як text/plain, щоб уникнути помилок CORS
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(payload)
                 });
 
-                if(typeof fbq !== 'undefined' && PIXEL_ID !== '1299600201739170') {
-                    fbq('track', 'Lead');
+                const data = await response.json();
+
+                if (data.result === "success" && data.paymentData) {
+                    if(typeof fbq !== 'undefined') fbq('track', 'Lead');
+
+                    // Будуємо форму WayForPay
+                    const formWfp = document.createElement("form");
+                    formWfp.method = "POST";
+                    formWfp.action = "https://secure.wayforpay.com/pay";
+                    formWfp.style.display = "none";
+
+                    for (const key in data.paymentData) {
+                        const input = document.createElement("input");
+                        input.type = "hidden";
+                        // Обробка масивів для WFP
+                        if (key === "productName" || key === "productCount" || key === "productPrice") {
+                             input.name = `${key}[]`;
+                        } else {
+                             input.name = key;
+                        }
+                        input.value = data.paymentData[key];
+                        formWfp.appendChild(input);
+                    }
+
+                    document.body.appendChild(formWfp);
+                    formWfp.submit(); // Редірект на WayForPay
+                } else {
+                    throw new Error("Payment generation failed");
                 }
-
-                // 2. ФОРМУВАННЯ ОПЛАТИ WAYFORPAY
-                const orderDate = Math.floor(Date.now() / 1000);
-                const productName = "Персональна діагностика";
-                const productCount = 1;
-                const amount = currentPrice;
-                const currency = "UAH";
-
-                // Рядок для генерації підпису (строго за документацією WFP)
-                const signString = `${WFP_MERCHANT_ACCOUNT};${WFP_DOMAIN};${userUID};${orderDate};${amount};${currency};${productName};${productCount};${amount}`;
-                
-                // Генерація HMAC_MD5 підпису за допомогою CryptoJS
-                const merchantSignature = CryptoJS.HmacMD5(signString, WFP_MERCHANT_SECRET).toString(CryptoJS.enc.Hex);
-
-                // Створення прихованої HTML-форми для перенаправлення на шлюз оплати
-                const formWfp = document.createElement("form");
-                formWfp.method = "POST";
-                formWfp.action = "https://secure.wayforpay.com/pay";
-                formWfp.style.display = "none";
-
-                // Стандартні поля
-                const fields = {
-                    merchantAccount: WFP_MERCHANT_ACCOUNT,
-                    merchantDomainName: WFP_DOMAIN,
-                    orderReference: userUID, // UID замовлення
-                    orderDate: orderDate,
-                    amount: amount,
-                    currency: currency,
-                    returnUrl: WFP_RETURN_URL, // Куди повернути після оплати
-                    merchantSignature: merchantSignature,
-                    clientFirstName: payload.name,
-                    clientPhone: payload.phone
-                };
-
-                for (const key in fields) {
-                    const input = document.createElement("input");
-                    input.type = "hidden";
-                    input.name = key;
-                    input.value = fields[key];
-                    formWfp.appendChild(input);
-                }
-
-                // Масиви (Вимога WayForPay для товарів)
-                const arrayFields = { 
-                    productName: productName, 
-                    productCount: productCount, 
-                    productPrice: amount 
-                };
-
-                for (const key in arrayFields) {
-                    const input = document.createElement("input");
-                    input.type = "hidden";
-                    input.name = `${key}[]`;
-                    input.value = arrayFields[key];
-                    formWfp.appendChild(input);
-                }
-
-                document.body.appendChild(formWfp);
-                formWfp.submit(); // Автоматичний сабміт і перехід на оплату
 
             } catch (error) {
                 console.error('Error:', error);
-                alert('Сталася помилка. Спробуйте ще раз.');
+                alert('Сталася помилка при з’єднанні з платіжною системою.');
                 submitBtn.disabled = false;
                 btnText.innerHTML = `ОПЛАТИТИ <span class="dynamic-price">${currentPrice} ₴</span>`;
                 btnLoader.classList.add('hidden');
@@ -572,6 +513,3 @@
     </script>
 </body>
 </html>
-
-
-
