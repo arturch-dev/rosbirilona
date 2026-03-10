@@ -22,7 +22,7 @@
 
     <!-- Facebook Pixel Code (Заглушка для таргетолога) -->
     <script>
-        const PIXEL_ID = 'YOUR_PIXEL_ID'; // ВСТАВТЕ ID ПІКСЕЛЯ ТУТ
+        const PIXEL_ID = '1299600201739170'; // ВСТАВТЕ ID ПІКСЕЛЯ ТУТ
         
         !function(f,b,e,v,n,t,s)
         {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -32,7 +32,7 @@
         t.src=v;s=b.getElementsByTagName(e)[0];
         s.parentNode.insertBefore(t,s)}(window, document,'script',
         'https://connect.facebook.net/en_US/fbevents.js');
-        if(PIXEL_ID !== 'YOUR_PIXEL_ID') {
+        if(PIXEL_ID !== '1299600201739170') {
             fbq('init', PIXEL_ID);
             fbq('track', 'PageView');
         }
@@ -498,7 +498,7 @@
                     body: JSON.stringify(payload)
                 });
 
-                if(typeof fbq !== 'undefined' && PIXEL_ID !== 'YOUR_PIXEL_ID') {
+                if(typeof fbq !== 'undefined' && PIXEL_ID !== '1299600201739170') {
                     fbq('track', 'Lead');
                 }
 
@@ -572,5 +572,6 @@
     </script>
 </body>
 </html>
+
 
 
