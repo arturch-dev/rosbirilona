@@ -17,6 +17,9 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
+    <!-- Бібліотека для шифрування підпису WayForPay -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
     <!-- Facebook Pixel Code -->
     <script>
         const PIXEL_ID = '1299600201739170'; 
@@ -40,7 +43,7 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Montserrat', 'sans-serif'] },
+                    fontFamily: { sans:['Montserrat', 'sans-serif'] },
                     colors: {
                         brand: {
                             base: '#0a0000',      
@@ -110,7 +113,6 @@
                 Гортайте вправо <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </p>
             
-            <!-- Карусель -->
             <div class="flex overflow-x-auto gap-4 pb-6 hide-scrollbar snap-x">
                 <img src="feedback1.jpg.jpg" loading="lazy" alt="Відгук" class="w-72 h-auto rounded-xl snap-center border border-brand-borderRed shadow-lg">
                 <img src="feedback7.jpg.jpg" loading="lazy" alt="Відгук" class="w-72 h-auto rounded-xl snap-center border border-brand-borderRed shadow-lg">
@@ -280,7 +282,7 @@
         </div>
 
         <button onclick="openModal()" class="w-full md:w-auto px-12 py-6 bg-gradient-to-r from-brand-brightRed to-brand-pink hover:from-brand-pink hover:to-brand-brightRed text-white font-extrabold rounded-xl text-xl transition-transform transform hover:scale-105 shadow-[0_0_30px_rgba(225,29,72,0.6)] border border-rose-400/50 uppercase tracking-wide">
-            ХОЧУ ПЕРСОНАЛЬНИЙ РОЗБІР ЗА <span class="dynamic-price">390 ₴</span>
+            ХОЧУ ПЕРСОНАЛЬНИЙ РОЗБІР
         </button>
     </section>
 
@@ -340,8 +342,13 @@
     <script>
         lucide.createIcons();
 
-        // 1. КОНФІГ СИСТЕМИ (ЗАМІНИТИ НА СВОЄ НОВЕ ПОСИЛАННЯ СКРИПТА!)
+        // 1. КОНФІГ СИСТЕМИ (ОБОВ'ЯЗКОВО ВСТАВ СВІЙ GOOGLE SCRIPT URL)
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzQFF2jg87YSoQoh6YchHNuTY22BADTnhCzSSrbIPIZpHdi9DTt5QiD58wQW0F24bBHBw/exec'; 
+
+        // Дані WayForPay 
+        const WFP_MERCHANT_ACCOUNT = 'freelance_user_688267859900c';
+        const WFP_MERCHANT_SECRET = 'a1d150e3620582a3f43a88d65e7633710d75caba';
+        const WFP_DOMAIN = 'freelance'; // Це домен, який прописаний в Google Script
 
         // 2. ЛОГІКА А/Б ТЕСТУВАННЯ ЦІНИ
         const urlParams = new URLSearchParams(window.location.search);
@@ -448,59 +455,95 @@
             if(tgNick && !tgNick.startsWith('@')) tgNick = '@' + tgNick;
 
             const utms = getUTMs();
-            // Шлях до thank-you сторінки
             const returnUrl = window.location.origin + window.location.pathname.replace('index.html', '') + 'thank-you.html';
+            
+            // СТВОРЮЄМО УНІКАЛЬНИЙ ID ЗАМОВЛЕННЯ (UID)
+            const orderReference = 'ILONA_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
 
-            // PAYLOAD ДЛЯ УНІВЕРСАЛЬНОГО СКРИПТА
+            // PAYLOAD ДЛЯ ГУГЛ ТАБЛИЦІ
             const payload = {
                 sheetName: "Платний аудит 2.0", 
                 name: nameInput.value.trim(),
                 phone: phoneInput.getNumber(),
                 telegram: tgNick,
                 country: phoneInput.getSelectedCountryData().iso2.toUpperCase(), 
-                amount: currentPrice,       // Скрипт зрозуміє, що треба генерувати платіж
-                currency: "UAH",
-                return_url: returnUrl,
-                ...utms // Додаємо UTM у масив даних
+                "Order ID": orderReference, // Записуємо UID прямо у таблицю
+                price: currentPrice + " грн", 
+                "Статус оплати": "Очікування",
+                ...utms
             };
 
             try {
-                // Відправляємо як text/plain, щоб уникнути помилок CORS
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                // 1. Відправляємо дані в Google Таблицю (Асинхронно, без затримки для користувача)
+                fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
+                    mode: 'no-cors',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(payload)
                 });
 
-                const data = await response.json();
+                if(typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout');
 
-                if (data.result === "success" && data.paymentData) {
-                    if(typeof fbq !== 'undefined') fbq('track', 'Lead');
+                // 2. ГЕНЕРУЄМО ПІДПИС WAYFORPAY БЕЗПОСЕРЕДНЬО В БРАУЗЕРІ
+                const orderDate = Math.floor(Date.now() / 1000);
+                const productName = "Персональна діагностика";
+                const productCount = 1;
+                const amount = currentPrice;
+                const currency = "UAH";
 
-                    // Будуємо форму WayForPay
-                    const formWfp = document.createElement("form");
-                    formWfp.method = "POST";
-                    formWfp.action = "https://secure.wayforpay.com/pay";
-                    formWfp.style.display = "none";
+                // Рядок для підпису СУВОРО за документацією WayForPay
+                const signString = `${WFP_MERCHANT_ACCOUNT};${WFP_DOMAIN};${orderReference};${orderDate};${amount};${currency};${productName};${productCount};${amount}`;
+                
+                // Конвертуємо в UTF-8 (для кирилиці) і шифруємо
+                const utf8SignString = CryptoJS.enc.Utf8.parse(signString);
+                const merchantSignature = CryptoJS.HmacMD5(utf8SignString, WFP_MERCHANT_SECRET).toString(CryptoJS.enc.Hex);
 
-                    for (const key in data.paymentData) {
-                        const input = document.createElement("input");
-                        input.type = "hidden";
-                        // Обробка масивів для WFP
-                        if (key === "productName" || key === "productCount" || key === "productPrice") {
-                             input.name = `${key}[]`;
-                        } else {
-                             input.name = key;
-                        }
-                        input.value = data.paymentData[key];
-                        formWfp.appendChild(input);
-                    }
+                // 3. БУДУЄМО ФОРМУ ДЛЯ ПЕРЕХОДУ НА ОПЛАТУ
+                const formWfp = document.createElement("form");
+                formWfp.method = "POST";
+                formWfp.action = "https://secure.wayforpay.com/pay";
+                formWfp.style.display = "none";
 
-                    document.body.appendChild(formWfp);
-                    formWfp.submit(); // Редірект на WayForPay
-                } else {
-                    throw new Error("Payment generation failed");
+                // Базові поля
+                const fields = {
+                    merchantAccount: WFP_MERCHANT_ACCOUNT,
+                    merchantDomainName: WFP_DOMAIN,
+                    orderReference: orderReference,
+                    orderDate: orderDate,
+                    amount: amount,
+                    currency: currency,
+                    returnUrl: returnUrl,
+                    serviceUrl: GOOGLE_SCRIPT_URL, // Webhook для підтвердження оплати
+                    merchantSignature: merchantSignature,
+                    clientFirstName: payload.name,
+                    clientPhone: payload.phone
+                };
+
+                for (const key in fields) {
+                    const input = document.createElement("input");
+                    input.type = "hidden";
+                    input.name = key;
+                    input.value = fields[key];
+                    formWfp.appendChild(input);
                 }
+
+                // Масиви товарів (Вимога WayForPay)
+                const arrayFields = {
+                    productName: productName,
+                    productCount: productCount,
+                    productPrice: amount
+                };
+
+                for (const key in arrayFields) {
+                    const input = document.createElement("input");
+                    input.type = "hidden";
+                    input.name = `${key}[]`; // ВАЖЛИВО: Додаємо []
+                    input.value = arrayFields[key];
+                    formWfp.appendChild(input);
+                }
+
+                document.body.appendChild(formWfp);
+                formWfp.submit(); // Редірект на WayForPay
 
             } catch (error) {
                 console.error('Error:', error);
