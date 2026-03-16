@@ -77,35 +77,35 @@
 </head>
 <body class="antialiased pb-20 md:pb-0">
 
-    <!-- БЛОК 1: HERO (ОНОВЛЕНО: Фото на фоні) -->
-    <header class="relative min-h-[90vh] md:min-h-[100vh] flex flex-col justify-end pt-40 pb-16 px-4 overflow-hidden">
+    <!-- БЛОК 1: HERO (Змінено відступи та градієнт, щоб лице було чітко видно) -->
+    <header class="relative min-h-[100svh] flex flex-col justify-end pt-[55vh] md:pt-[40vh] pb-12 px-4 overflow-hidden">
         
         <!-- ВСТАВ НАЗВУ СВОГО ФОТО ЗАМІСТЬ 'expert_bg.jpg' -->
         <img src="mainphoto.jpg" alt="Ілона Солдатюк" class="absolute inset-0 w-full h-full object-cover object-top z-0">
         
-        <!-- Градієнтне затемнення: зверху прозоре, знизу темне (щоб плавно переходило в наступний блок і текст читався) -->
-        <div class="absolute inset-0 bg-gradient-to-b from-black/10 via-[#120002]/80 to-[#0a0000] z-0"></div>
+        <!-- Градієнтне затемнення: зверху повністю прозоре (щоб лице було світле), знизу темне -->
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#120002]/80 to-[#0a0000] z-0"></div>
         
         <!-- Патерн -->
         <div class="absolute inset-0 z-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] pointer-events-none"></div>
         
         <div class="container mx-auto max-w-3xl relative z-10 text-center">
-            <span class="inline-block py-1.5 px-4 rounded-full bg-brand-brightRed/20 border border-brand-brightRed/30 text-brand-pink text-xs font-bold tracking-widest mb-6 uppercase shadow-[0_0_15px_rgba(225,29,72,0.3)] backdrop-blur-md">
+            <span class="inline-block py-1.5 px-4 rounded-full bg-brand-brightRed/20 border border-brand-brightRed/30 text-brand-pink text-xs font-bold tracking-widest mb-4 uppercase shadow-[0_0_15px_rgba(225,29,72,0.3)] backdrop-blur-md">
                 Персональна діагностика
             </span>
-            <h1 class="text-3xl md:text-5xl font-extrabold leading-tight mb-6 text-white drop-shadow-xl">
+            <h1 class="text-3xl md:text-5xl font-extrabold leading-tight mb-4 text-white drop-shadow-xl">
                 Як вийти зі стану <span class="text-gradient drop-shadow-md">тривоги</span>, самознецінення і внутрішньої <span class="text-gradient drop-shadow-md">порожнечі</span>
             </h1>
-            <p class="text-lg md:text-xl text-brand-light/90 mb-8 font-medium drop-shadow-lg">
+            <p class="text-lg md:text-xl text-brand-light/90 mb-6 font-medium drop-shadow-lg">
                 БЕЗ років терапії та тисяч на психологів. Отримай чіткий план: що тримає тебе у тривозі і нещасливих стосунках, та конкретні кроки для виходу.
             </p>
             
-            <div class="glass-panel rounded-2xl p-6 mb-8 inline-block mx-auto shadow-[0_0_30px_rgba(225,29,72,0.15)] w-full max-w-md backdrop-blur-xl bg-[#240005]/70">
+            <div class="glass-panel rounded-2xl p-5 mb-6 inline-block mx-auto shadow-[0_0_30px_rgba(225,29,72,0.15)] w-full max-w-md backdrop-blur-xl bg-[#240005]/80">
                 <div class="flex items-center justify-center gap-4 mb-2">
                     <span class="text-brand-light/50 line-through text-2xl">1790 ₴</span>
                     <span class="text-4xl font-bold text-brand-pink dynamic-price">390 ₴</span>
                 </div>
-                <p class="text-sm text-brand-brightRed font-semibold mb-2 tracking-wide" id="timer-text">ДО ЗБІЛЬШЕННЯ ЦІНИ: <span id="timer" class="text-white">14:59</span></p>
+                <p class="text-sm text-brand-brightRed font-semibold tracking-wide" id="timer-text">ДО ЗБІЛЬШЕННЯ ЦІНИ: <span id="timer" class="text-white">14:59</span></p>
             </div>
 
             <button onclick="openModal()" class="w-full md:w-auto px-10 py-5 bg-gradient-to-r from-brand-brightRed to-brand-pink hover:from-brand-pink hover:to-brand-brightRed text-white font-bold rounded-xl text-lg transition-transform transform hover:scale-105 shadow-[0_0_25px_rgba(225,29,72,0.5)] border border-rose-400/50 block mx-auto">
@@ -291,7 +291,7 @@
         </div>
 
         <button onclick="openModal()" class="w-full md:w-auto px-12 py-6 bg-gradient-to-r from-brand-brightRed to-brand-pink hover:from-brand-pink hover:to-brand-brightRed text-white font-extrabold rounded-xl text-xl transition-transform transform hover:scale-105 shadow-[0_0_30px_rgba(225,29,72,0.6)] border border-rose-400/50 uppercase tracking-wide">
-            ХОЧУ ПЕРСОНАЛЬ РОЗБІР
+            ХОЧУ ПЕРСОНАЛЬНИЙ РОЗБІР
         </button>
     </section>
 
