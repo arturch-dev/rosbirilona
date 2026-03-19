@@ -89,10 +89,14 @@
         <!-- Патерн -->
         <div class="absolute inset-0 z-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] pointer-events-none"></div>
         
-        <div class="container mx-auto max-w-3xl relative z-10 text-center">
-            <span class="inline-block py-1.5 px-4 rounded-full bg-brand-brightRed/20 border border-brand-brightRed/30 text-brand-pink text-xs font-bold tracking-widest mb-4 uppercase shadow-[0_0_15px_rgba(225,29,72,0.3)] backdrop-blur-md">
+        <!-- НАПИС "ПЕРСОНАЛЬНА ДІАГНОСТИКА" ПЕРЕНЕСЕНИЙ НАГОРУ -->
+        <div class="absolute top-10 left-0 w-full flex justify-center z-20 px-4">
+            <span class="inline-block py-1.5 px-4 rounded-full bg-brand-brightRed/20 border border-brand-brightRed/30 text-brand-pink text-xs font-bold tracking-widest uppercase shadow-[0_0_15px_rgba(225,29,72,0.3)] backdrop-blur-md text-center">
                 Персональна діагностика
             </span>
+        </div>
+
+        <div class="container mx-auto max-w-3xl relative z-10 text-center">
             <h1 class="text-3xl md:text-5xl font-extrabold leading-tight mb-4 text-white drop-shadow-xl">
                 Як вийти зі стану <span class="text-gradient drop-shadow-md">тривоги</span>, самознецінення і внутрішньої <span class="text-gradient drop-shadow-md">порожнечі</span>
             </h1>
@@ -546,7 +550,7 @@
                 for (const key in arrayFields) {
                     const input = document.createElement("input");
                     input.type = "hidden";
-                    input.name = `${key}[]`; // ВАЖЛИВО: Додаємо []
+                    input.name = `${key}[]`; // ВАЖЛИВО: Додаємо[]
                     input.value = arrayFields[key];
                     formWfp.appendChild(input);
                 }
