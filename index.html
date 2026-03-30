@@ -478,10 +478,11 @@
             const returnUrl = window.location.origin + window.location.pathname.replace('index.html', '') + 'thank-you.html';
             
             // СТВОРЮЄМО УНІКАЛЬНИЙ ID ЗАМОВЛЕННЯ (UID)
-            const orderReference = 'ILONA_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+            const orderReference = 'ILONA_505542102_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
 
             // PAYLOAD ДЛЯ ГУГЛ ТАБЛИЦІ
             const payload = {
+                sheet_id: "505542102",
                 sheetName: "Платний аудит 2.0", 
                 name: nameInput.value.trim(),
                 phone: phoneInput.getNumber(),
